@@ -2,7 +2,7 @@ export const navbar = `
 <header class="navbar">
   <div class="container">
     <a href="/">
-      <img src="/public/image/dicoding-header-logo.png" alt="Dicoding Logo" />
+      <img src="/image/dicoding-header-logo.png" alt="Dicoding Logo" />
     </a>
     <nav class="nav-links">
       <ul>
