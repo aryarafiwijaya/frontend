@@ -106,7 +106,7 @@ const routes = [
           <button class="cta">Belajar Sekarang</button>
         </div>
         <div class="hero-image">
-          <img src="/public/image/homepage-hero.png" alt="Hero" />
+          <img src="/image/homepage-hero.png" alt="Hero" />
         </div>
       </section>
 
@@ -128,7 +128,7 @@ const routes = [
           </div>
 
           <div class="features-image">
-            <img src="/public/image/feature-1-landing-page.png" alt="Feature" />
+            <img src="/image/feature-1-landing-page.png" alt="Feature" />
           </div>
         </div>
       </section>
@@ -142,30 +142,30 @@ const routes = [
     }
   },
 
-  // DASHBOARD PROGRESS
-  {
-    path: '/dashboard/progress',
-    template: `
-      <section class="progress-page">
-        <h1>Progress Belajar</h1>
-        <p>Halaman ini menampilkan perkembangan belajar Anda.</p>
+  // // DASHBOARD PROGRESS
+  // {
+  //   path: '/dashboard/progress',
+  //   template: `
+  //     <section class="progress-page">
+  //       <h1>Progress Belajar</h1>
+  //       <p>Halaman ini menampilkan perkembangan belajar Anda.</p>
 
-        <div id="progress-container"></div>
-      </section>
-    `,
-    script: () => {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/src/pages/dashboard/progress/style.css';
-      document.head.appendChild(link);
+  //       <div id="progress-container"></div>
+  //     </section>
+  //   `,
+  //   script: () => {
+  //     const link = document.createElement('link');
+  //     link.rel = 'stylesheet';
+  //     link.href = '/src/pages/dashboard/progress/style.css';
+  //     document.head.appendChild(link);
 
-      console.log("Progress dashboard loaded");
+  //     console.log("Progress dashboard loaded");
 
-      import('/src/pages/dashboard/progress/script.js')
-        .then(() => console.log("Progress script loaded"))
-        .catch(() => console.warn("script.js tidak ditemukan"));
-    }
-  },
+  //     import('/src/pages/dashboard/progress/script.js')
+  //       .then(() => console.log("Progress script loaded"))
+  //       .catch(() => console.warn("script.js tidak ditemukan"));
+  //   }
+  // },
 
   // LOGIN
   {
@@ -173,7 +173,7 @@ const routes = [
     template: `
       <div class="login-container">
         <div class="image-placeholder">
-          <img src="/public/image/homepage-hero.png" alt="Login Illustration" />
+          <img src="/image/homepage-hero.png" alt="Login Illustration" />
         </div>
 
         <div class="form-section">
@@ -231,7 +231,7 @@ const routes = [
     template: `
       <div class="register-container">
         <div class="image-placeholder">
-          <img src="/public/image/homepage-hero.png" alt="Register Illustration" />
+          <img src="/image/homepage-hero.png" alt="Register Illustration" />
         </div>
 
         <div class="form-section">
@@ -269,6 +269,121 @@ const routes = [
   }
 
 ];
+
+// DASHBOARD PROGRESS
+  {
+    path: '/dashboard/progress'
+    template: `
+      <!-- Container khusus dashboard -->
+      <div class="dashboard-layout">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li class="sidebar-item active">
+                        <a href="/dashboard/progress" class="sidebar-link" data-link>
+                            <img src="/progress-icon.png" alt="Progress">
+                            <span>Progres Belajar</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                         <a href="/dashboard/runtutan" class="sidebar-link" data-link>
+                            <img src="/runtutan-icon.png" alt="Runtutan">
+                            <span>Runtutan Belajar</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                         <a href="/dashboard/langganan" class="sidebar-link" data-link>
+                            <img src="/langganan-icon.png" alt="Langganan">
+                            <span>Langganan</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="content">
+            <h1 class="page-title">Progres Belajar</h1>
+
+            <!-- Kelas Sedang Dipelajari -->
+            <section class="class-section">
+                <div class="section-header">
+                    <img src="/class-icon.png" alt="Class Icon">
+                    <h2>Kelas yang Sedang Dipelajari</h2>
+                </div>
+
+                <p class="section-description">Lanjutkan progres belajar Anda untuk mencapai target.</p>
+
+                <div class="class-list">
+                    <div class="class-item completed">
+                        <div class="status-icon">✔</div>
+                        <span>Memulai Dasar Pemrograman Untuk Menjadi Pengembang Software</span>
+                        <button class="detail-button">Detail Kelas</button>
+                    </div>
+
+                    <div class="class-item completed">
+                        <div class="status-icon">✔</div>
+                        <span>Pengenalan ke Logika Pemrograman (Programming Logic 101)</span>
+                        <button class="detail-button">Detail Kelas</button>
+                    </div>
+
+                    <div class="class-item in-progress">
+                        <div class="status-icon">!</div>
+                        <span>Belajar Dasar Pemrograman Web</span>
+                        <button class="detail-button">Detail Kelas</button>
+                    </div>
+
+                    <div class="class-item in-progress">
+                        <div class="status-icon">!</div>
+                        <span>Belajar Dasar Pemrograman JavaScript</span>
+                        <button class="detail-button">Detail Kelas</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kelas Selesai -->
+            <section class="class-section completed-section">
+                <div class="section-header">
+                    <img src="/class-icon.png" alt="Class Icon">
+                    <h2>Kelas yang Sudah Diselesaikan</h2>
+                </div>
+                
+                <p class="section-description">Selamat! Anda telah menyelesaikan kelas berikut.</p>
+
+                <div class="class-list">
+                    <div class="class-item completed">
+                        <div class="status-icon">✔</div>
+                        <span>Belajar Dasar Git dengan GitHub</span>
+                        <button class="detail-button">Detail Kelas</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+      </div>
+    `
+    script: async () => {
+      // 1. Load CSS
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/src/pages/dashboard/progress/style.css';
+      document.head.appendChild(link);
+
+      // 2. Load Script Module
+      try {
+        const module = await import('/src/pages/dashboard/progress/script.js');
+        if (module.initProgressPage) {
+            module.initProgressPage();
+        }
+      } catch (err) {
+        console.error("Error loading dashboard script:", err);
+      }
+    }
+  }
+
+
 
 // Initialize router
 new Router(routes);
