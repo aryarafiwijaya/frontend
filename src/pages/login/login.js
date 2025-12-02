@@ -1,21 +1,17 @@
+import { authAPI } from "../../api/api.js";
+
 export default class LoginPage {
-  // ======================================================
-  // ================ 1. HTML VIEW COMPONENT ===============
-  // ======================================================
   render() {
     return `
-      
-      <!-- MAIN CONTENT -->
       <main class="flex-1 flex items-center justify-center p-4">
-
         <div class="bg-white rounded-2xl shadow-xl flex flex-col md:flex-row overflow-hidden max-w-[950px] w-full">
 
           <!-- LEFT IMAGE -->
           <div class="hidden md:flex md:w-1/2 bg-gray-100 items-center justify-center relative bg-[#eef2f5]">
             <img src="https://dicoding-web-img.sgp1.cdn.digitaloceanspaces.com/original/commons/homepage-hero.png"
-                 alt="Dicoding Hero"
-                 class="w-full h-full object-cover object-center"
-                 onerror="this.src='https://placehold.co/600x600/e2e8f0/a0aec0?text=Hero+Image'" />
+              alt="Dicoding Hero"
+              class="w-full h-full object-cover object-center"
+              onerror="this.src='https://placehold.co/600x600/e2e8f0/a0aec0?text=Hero+Image'" />
           </div>
 
           <!-- RIGHT FORM -->
@@ -32,7 +28,7 @@ export default class LoginPage {
 
               <!-- EMAIL -->
               <div class="flex flex-col">
-                <input type="email" placeholder="Email" required
+                <input type="email" id="email" placeholder="Email" required
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm 
                   focus:outline-none focus:ring-2 focus:ring-[#2d3e50] focus:border-transparent 
                   transition-all placeholder-gray-400">
@@ -47,9 +43,8 @@ export default class LoginPage {
 
                 <button type="button" id="togglePassword"
                   class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 
-                  hover:text-gray-600 focus:outline-none p-1 cursor-pointer">
+                  hover:text-gray-600 p-1 cursor-pointer">
 
-                  <!-- ICON SHOW -->
                   <svg id="icon-show" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                     class="w-5 h-5">
@@ -60,7 +55,6 @@ export default class LoginPage {
                       d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
 
-                  <!-- ICON HIDE -->
                   <svg id="icon-hide" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                     class="w-5 h-5 hidden">
@@ -72,12 +66,6 @@ export default class LoginPage {
                       0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
                   </svg>
                 </button>
-              </div>
-
-              <div class="flex justify-end -mt-1">
-                <a href="#" class="text-[13px] font-medium text-gray-500 hover:text-[#2d3e50]">
-                  Lupa Password?
-                </a>
               </div>
 
               <button type="submit"
@@ -98,25 +86,37 @@ export default class LoginPage {
     `;
   }
 
-  // ======================================================
-  // ===================== 2. LOGIC =======================
-  // ======================================================
   afterRender() {
-    // FORM SUBMIT
     const form = document.getElementById("login-form");
-    if (form) {
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        alert("Login Berhasil!");
-      });
-    }
-
-    // TOGGLE PASSWORD
     const toggleBtn = document.getElementById("togglePassword");
     const passwordInput = document.getElementById("password");
     const iconShow = document.getElementById("icon-show");
     const iconHide = document.getElementById("icon-hide");
 
+    // === 1. HANDLE LOGIN ===
+    if (form) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        try {
+          const result = await authAPI.login({ email, password });
+
+          // Simpan token
+          localStorage.setItem("token", result.token);
+
+          alert("Login berhasil!");
+          window.location.hash = "/"; // ganti halaman tujuan (dashboard/home)
+
+        } catch (error) {
+          alert("Login gagal: " + error.message);
+        }
+      });
+    }
+
+    // === 2. PASSWORD TOGGLE ===
     if (toggleBtn) {
       toggleBtn.addEventListener("click", () => {
         const isHidden = passwordInput.type === "password";

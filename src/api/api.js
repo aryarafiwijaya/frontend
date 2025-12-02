@@ -5,12 +5,14 @@ const getAuthHeaders = () => {
   return token ? { 'Authorization': `Bearer ${token}` } : {};
 };
 
-const handleResponse = async (response) => {
+async function handleResponse(response) {
   if (!response.ok) {
+    const errorText = await response.text(); // baca body backend
+    console.error("API ERROR DETAIL:", errorText);
     throw new Error(`HTTP error! status: ${response.status}`);
   }
   return response.json();
-};
+}
 
 // Authentication APIs
 export const authAPI = {
