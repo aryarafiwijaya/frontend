@@ -1,4 +1,4 @@
-import { progressAPI } from "../../api/api.js";
+import { progressAPI, modulesAPI } from "../../api/api.js";
 
 export default class ProgressPage {
   constructor() {
@@ -16,7 +16,7 @@ export default class ProgressPage {
           <div class="py-4">
             <nav class="space-y-1">
                 <!-- Link 1: Progres Belajar (AKTIF) -->
-                <a href="/#/progres" class="bg-gray-100 text-slate-900 font-bold group flex items-center px-6 py-4 text-sm transition-all relative">
+                <a href="/#/dashboard" class="bg-gray-100 text-slate-900 font-bold group flex items-center px-6 py-4 text-sm transition-all relative">
                     <div class="absolute left-0 top-0 bottom-0 w-1 bg-slate-900"></div>
                     <i class="fa-solid fa-chart-pie mr-4 text-lg w-5 text-center"></i>
                     Progres Belajar
@@ -99,9 +99,9 @@ export default class ProgressPage {
     // 1. CEK TOKEN DULU: Kalau tidak ada token, jangan panggil API, langsung minta login
     const token = localStorage.getItem("token");
     if (!token) {
-        alert("Anda belum login. Silakan login terlebih dahulu.");
-        window.location.hash = "/login"; 
-        return;
+      alert("Anda belum login. Silakan login terlebih dahulu.");
+      window.location.hash = "/login";
+      return;
     }
 
     await this.fetchProgressData();
@@ -125,7 +125,7 @@ export default class ProgressPage {
       const overallPercentage = data.percentage || 0;
 
       if (headerSubtitle) {
-        headerSubtitle.textContent = Total Pencapaian: ${overallPercentage}%;
+        headerSubtitle.textContent = `Total Pencapaian: ${overallPercentage}%`;
       }
 
       const activeModules = allModules.filter((m) => m.progress < 100);
@@ -162,7 +162,7 @@ export default class ProgressPage {
           .map((m) => createItemHTML(m, false))
           .join("");
       } else {
-        activeContainer.innerHTML = <div class="p-5 text-gray-500 text-sm italic text-center">Tidak ada kelas yang sedang dipelajari.</div>;
+        activeContainer.innerHTML = `<div class="p-5 text-gray-500 text-sm italic text-center">Tidak ada kelas yang sedang dipelajari.</div>`;
       }
 
       // Render Completed
@@ -171,21 +171,20 @@ export default class ProgressPage {
           .map((m) => createItemHTML(m, true))
           .join("");
       } else {
-        completedContainer.innerHTML = <div class="p-5 text-gray-500 text-sm italic text-center">Belum ada kelas yang diselesaikan.</div>;
+        completedContainer.innerHTML = `<div class="p-5 text-gray-500 text-sm italic text-center">Belum ada kelas yang diselesaikan.</div>`;
       }
-
     } catch (error) {
       console.error("Error fetching progress:", error);
-      
+
       // Pesan error lebih detail
       let msg = "Gagal memuat data.";
       if (error.message.includes("401") || error.message.includes("403")) {
-          msg = "Sesi habis. Silakan login ulang.";
+        msg = "Sesi habis. Silakan login ulang.";
       } else if (error.message.includes("Failed to fetch")) {
-          msg = "Gagal menghubungi server (Backend mati?).";
+        msg = "Gagal menghubungi server (Backend mati?).";
       }
 
-      const errorHTML = <div class="p-5 text-red-500 text-sm text-center font-medium">${msg} <br> Cek console (F12) untuk detail.</div>;
+      const errorHTML = `<div class="p-5 text-red-500 text-sm text-center font-medium">${msg} <br> Cek console (F12) untuk detail.</div>`;
       activeContainer.innerHTML = errorHTML;
       completedContainer.innerHTML = errorHTML;
     }

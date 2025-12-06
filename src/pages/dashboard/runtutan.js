@@ -1,13 +1,41 @@
 import { progressAPI, modulesAPI, learningPathsAPI } from "../../api/api.js";
 import * as echarts from "echarts";
 
-export default class DashboardPage {
+export default class RuntutanPage {
   constructor() {
-    this.title = "Dashboard";
+    this.title = "Runtutan";
   }
 
   async getHtml() {
     return `
+
+    <!-- SIDEBAR (Fixed Left) -->
+      <!-- Menggunakan class 'fixed' agar menempel di kiri layar -->
+      <aside class="fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 hidden md:flex flex-col z-20 overflow-y-auto">
+          <div class="py-4">
+            <nav class="space-y-1">
+                <!-- Link 1: Runtutan Belajar (AKTIF) -->
+                <a href="/#/runtutan" class="bg-gray-100 text-slate-900 font-bold group flex items-center px-6 py-4 text-sm transition-all relative">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-slate-900"></div>
+                    <i class="fa-solid fa-chart-pie mr-4 text-lg w-5 text-center"></i>
+                    Progres Belajar
+                </a>
+
+                <!-- Link 2: Progress Belajar -->
+                <a href="/#/progress" class="text-gray-600 hover:bg-gray-50 hover:text-slate-900 group flex items-center px-6 py-4 text-sm font-medium transition-all">
+                    <i class="fa-regular fa-calendar-check mr-4 text-lg w-5 text-center"></i>
+                    Runtutan Belajar
+                </a>
+                
+                <!-- Link 3: Langganan -->
+                <a href="/#/langganan" class="text-gray-600 hover:bg-gray-50 hover:text-slate-900 group flex items-center px-6 py-4 text-sm font-medium transition-all">
+                    <i class="fa-regular fa-file-lines mr-4 text-lg w-5 text-center"></i>
+                    Langganan
+                </a>
+            </nav>
+          </div>
+      </aside>
+
     <div class="space-y-6">
       <div class="flex items-center justify-between">
         <h2 class="text-xl font-semibold text-brand-500">Runtutan Belajar</h2>
@@ -124,14 +152,12 @@ export default class DashboardPage {
 
         console.log("Labels yang dipakai:", labels);
         console.log("Values yang dipakai:", values);
-
       } catch (err) {
         console.error("Gagal mengambil data chart:", err);
       }
 
       const myChart = echarts.init(chartDom);
       console.log("ECharts Instance:", myChart);
-      
 
       const option = {
         tooltip: { trigger: "axis" },
@@ -170,19 +196,22 @@ export default class DashboardPage {
         console.log("Overview Data:", overviewData);
 
         // Update progress display with correct API response structure
-        document.getElementById("progress-minutes").textContent = `${overviewData.percentage}%`;
-        document.getElementById("progress-percent").textContent = `▲ ${overviewData.percentage}%`;
-        document.getElementById("progress-modules").textContent = overviewData.modules?.length || 0;
+        document.getElementById(
+          "progress-minutes"
+        ).textContent = `${overviewData.percentage}%`;
+        document.getElementById(
+          "progress-percent"
+        ).textContent = `▲ ${overviewData.percentage}%`;
+        document.getElementById("progress-modules").textContent =
+          overviewData.modules?.length || 0;
       } catch (err) {
         console.error("Gagal mengambil data overview:", err);
         document.getElementById("progress-minutes").textContent = "Error";
         document.getElementById("progress-percent").textContent = "Error";
         document.getElementById("progress-modules").textContent = "Error";
       }
-
     }, 20);
   }
-
 
   async loadLearningPaths() {
     const container = document.querySelector("#learning-paths");
@@ -200,7 +229,9 @@ export default class DashboardPage {
                 <span class="list-dot bg-green-500"></span>
                 <div class="text-sm font-semibold">${p.learning_path_name}</div>
               </div>
-              <div class="text-sm text-gray-500">${p.modules?.length || 0} Modules</div>
+              <div class="text-sm text-gray-500">${
+                p.modules?.length || 0
+              } Modules</div>
             </div>
             <div class="text-xs text-gray-500">Learning Path</div>
           </div>
@@ -221,35 +252,38 @@ export default class DashboardPage {
       // Get modules and their progress data
       const [modules, overviewData] = await Promise.all([
         modulesAPI.getAll(),
-        progressAPI.getOverview()
+        progressAPI.getOverview(),
       ]);
 
       console.log("Modules Data:", modules);
       console.log("Overview Data for modules:", overviewData);
 
       container.innerHTML = modules
-        .map(
-          (m) => {
-            // Find progress for this module from overview data
-            const moduleProgress = overviewData.modules?.find(mod => mod.id === m.id)?.progress || 0;
-            return `
+        .map((m) => {
+          // Find progress for this module from overview data
+          const moduleProgress =
+            overviewData.modules?.find((mod) => mod.id === m.id)?.progress || 0;
+          return `
             <div class="border rounded p-3">
               <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-2">
-                  <span class="list-dot ${moduleProgress >= 100 ? "bg-green-500" : "bg-red-500"}"></span>
+                  <span class="list-dot ${
+                    moduleProgress >= 100 ? "bg-green-500" : "bg-red-500"
+                  }"></span>
                   <div class="text-sm font-semibold">${m.title}</div>
                 </div>
                 <div class="text-sm text-gray-500">${moduleProgress}% / 100%</div>
               </div>
               <div class="progress-rail w-full rounded-full">
                 <div class="rounded-full"
-                     style="width:${moduleProgress}%; height:10px; background:${moduleProgress >= 100 ? "#10b981" : "#ef4444"}">
+                     style="width:${moduleProgress}%; height:10px; background:${
+            moduleProgress >= 100 ? "#10b981" : "#ef4444"
+          }">
                 </div>
               </div>
             </div>
           `;
-          }
-        )
+        })
         .join("");
     } catch (err) {
       console.error("Error loading modules:", err);
@@ -257,4 +291,3 @@ export default class DashboardPage {
     }
   }
 }
-
