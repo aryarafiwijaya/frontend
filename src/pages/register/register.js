@@ -74,7 +74,7 @@ export default class RegisterPage {
 
         try {
           const response = await fetch(
-            "http://localhost:5000/api/auth/register",
+            "https://api.rakasatriaefendi.site/api/auth/register",
             {
               method: "POST",
               headers: {

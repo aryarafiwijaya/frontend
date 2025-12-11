@@ -1,25 +1,37 @@
-const API_BASE_URL = "http://localhost:5000/api";
+// ===== BASE URL =====
+const API_BASE_URL = "https://api.rakasatriaefendi.site/api";
 
+// Ambil token
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
+// Handler Response
 const handleResponse = async (response) => {
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+  let data;
+
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error("Response tidak valid dari server");
   }
-  return response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || `HTTP error! status: ${response.status}`);
+  }
+
+  return data;
 };
 
-// Authentication APIs
+// =============================
+// AUTH API
+// =============================
 export const authAPI = {
   register: async (data) => {
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
     return handleResponse(response);
@@ -28,19 +40,19 @@ export const authAPI = {
   login: async (data) => {
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
     return handleResponse(response);
   },
 };
 
-// Users APIs
+// =============================
+// USERS API
+// =============================
 export const usersAPI = {
   getAll: async () => {
-    const response = await fetch(`${API_BASE_URL}/users/`, {
+    const response = await fetch(`${API_BASE_URL}/users`, {
       headers: getAuthHeaders(),
     });
     return handleResponse(response);
@@ -54,19 +66,18 @@ export const usersAPI = {
   },
 
   add: async (data) => {
-    const response = await fetch(`${API_BASE_URL}/users/`, {
+    const response = await fetch(`${API_BASE_URL}/users`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...getAuthHeaders(),
-      },
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       body: JSON.stringify(data),
     });
     return handleResponse(response);
   },
 };
 
-// Progress APIs
+// =============================
+// PROGRESS API
+// =============================
 export const progressAPI = {
   getOverview: async () => {
     const response = await fetch(`${API_BASE_URL}/progress/overview`, {
@@ -80,12 +91,9 @@ export const progressAPI = {
       `${API_BASE_URL}/progress/module/${moduleId}/update`,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...getAuthHeaders(),
-        },
+        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
         body: JSON.stringify(data),
-      },
+      }
     );
     return handleResponse(response);
   },
@@ -105,10 +113,12 @@ export const progressAPI = {
   },
 };
 
-// Modules APIs
+// =============================
+// MODULES API
+// =============================
 export const modulesAPI = {
   getAll: async () => {
-    const response = await fetch(`${API_BASE_URL}/modules/`, {
+    const response = await fetch(`${API_BASE_URL}/modules`, {
       headers: getAuthHeaders(),
     });
     return handleResponse(response);
@@ -124,9 +134,7 @@ export const modulesAPI = {
   getChapters: async (moduleId) => {
     const response = await fetch(
       `${API_BASE_URL}/modules/${moduleId}/chapters`,
-      {
-        headers: getAuthHeaders(),
-      },
+      { headers: getAuthHeaders() }
     );
     return handleResponse(response);
   },
@@ -134,9 +142,7 @@ export const modulesAPI = {
   getChapter: async (moduleId, chapterId) => {
     const response = await fetch(
       `${API_BASE_URL}/modules/${moduleId}/chapters/${chapterId}`,
-      {
-        headers: getAuthHeaders(),
-      },
+      { headers: getAuthHeaders() }
     );
     return handleResponse(response);
   },
@@ -144,9 +150,7 @@ export const modulesAPI = {
   getSubchapters: async (moduleId, chapterId) => {
     const response = await fetch(
       `${API_BASE_URL}/modules/${moduleId}/chapters/${chapterId}/subchapters`,
-      {
-        headers: getAuthHeaders(),
-      },
+      { headers: getAuthHeaders() }
     );
     return handleResponse(response);
   },
@@ -154,9 +158,7 @@ export const modulesAPI = {
   getSubchapter: async (moduleId, chapterId, subchapterId) => {
     const response = await fetch(
       `${API_BASE_URL}/modules/${moduleId}/chapters/${chapterId}/subchapters/${subchapterId}`,
-      {
-        headers: getAuthHeaders(),
-      },
+      { headers: getAuthHeaders() }
     );
     return handleResponse(response);
   },
@@ -166,21 +168,20 @@ export const modulesAPI = {
       `${API_BASE_URL}/modules/${moduleId}/chapters/${chapterId}/subchapters/${subchapterId}`,
       {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          ...getAuthHeaders(),
-        },
+        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
         body: JSON.stringify(data),
-      },
+      }
     );
     return handleResponse(response);
   },
 };
 
-// Learning Paths APIs
+// =============================
+// LEARNING PATHS API
+// =============================
 export const learningPathsAPI = {
   getAll: async () => {
-    const response = await fetch(`${API_BASE_URL}/learning-paths/`, {
+    const response = await fetch(`${API_BASE_URL}/learning-paths`, {
       headers: getAuthHeaders(),
     });
     return handleResponse(response);
@@ -189,30 +190,27 @@ export const learningPathsAPI = {
   getById: async (learningpathId) => {
     const response = await fetch(
       `${API_BASE_URL}/learning-paths/${learningpathId}`,
-      {
-        headers: getAuthHeaders(),
-      },
+      { headers: getAuthHeaders() }
     );
     return handleResponse(response);
   },
 };
 
-// Subscriptions (Langganan) APIs
+// =============================
+// LANGGANAN / SUBSCRIPTION API
+// =============================
 export const subscriptionsAPI = {
   getAll: async () => {
-    const response = await fetch(`${API_BASE_URL}/langganan/`, {
+    const response = await fetch(`${API_BASE_URL}/langganan`, {
       headers: getAuthHeaders(),
     });
     return handleResponse(response);
   },
 
   add: async (data) => {
-    const response = await fetch(`${API_BASE_URL}/langganan/`, {
+    const response = await fetch(`${API_BASE_URL}/langganan`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...getAuthHeaders(),
-      },
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       body: JSON.stringify(data),
     });
     return handleResponse(response);
@@ -221,10 +219,7 @@ export const subscriptionsAPI = {
   update: async (id, data) => {
     const response = await fetch(`${API_BASE_URL}/langganan/${id}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        ...getAuthHeaders(),
-      },
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       body: JSON.stringify(data),
     });
     return handleResponse(response);
